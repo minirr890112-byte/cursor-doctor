@@ -1,7 +1,7 @@
 [project]
 name = "cursor-doctor"
-version = "0.1.0"
-description = "Cursor IDE 故障诊断与修复工具 — 一键诊断 Cursor 报错/崩溃/配置问题"
+version = "1.2.0"
+description = "Cursor IDE 故障诊断、定价选型与修复工具 — 24+签名检测 + 套餐决策树 + 迁移指南"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}

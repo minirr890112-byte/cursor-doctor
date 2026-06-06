@@ -1,209 +1,108 @@
-# 🩺 Cursor Doctor — Cursor IDE Error Diagnostic & Repair Tool
+# 🩺 Cursor Doctor — Cursor IDE 诊断·定价·修复全能工具
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/minirr890112-byte/cursor-doctor?style=flat-square)](https://github.com/minirr890112-byte/cursor-doctor)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue?style=flat-square)](https://github.com/minirr890112-byte/cursor-doctor)
 
-> **Cursor IDE 故障诊断与修复工具** — 一键诊断 Cursor 报错、崩溃、配置问题，并提供智能修复方案。  
-> **Cursor IDE Error Diagnostic & Repair Tool** — One-command diagnosis and intelligent fix for Cursor errors, crashes, and configuration issues.
+> **Cursor IDE 故障诊断、定价选型与修复工具** — 一键诊断 Cursor 报错、崩溃、配置问题，智能推荐套餐，并提供自动修复方案。
+> 基于 **V2EX 156条 + CSDN 85篇** 中文开发者社区真实痛点信号。
+
+---
+
+## 🆕 v1.2.0 更新 (2026-06-06)
+
+- 🎯 **定价选型矩阵** — `cursor-doctor pricing` 决策树 + 套餐对比 + 迁移指南
+- 📋 **迁移指南** — `cursor-doctor migrate` 500次限制已取消 → 无限使用
+- 🔍 **错误签名翻倍** — 14 → 28 条签名，10 个分类（新增定价/性能/更新/账号）
+- 📊 **数据驱动** — 基于 V2EX 101条定价讨论 + CSDN 55篇 Cursor文章
 
 ---
 
 ## 📦 Installation / 安装
 
-> ⚠️ **cursor-doctor is NOT published on PyPI yet.** Use one of the methods below.
-
-### Method 1: Install directly from GitHub (recommended)
-
 ```bash
+# 方法 1: 直接从 GitHub 安装 (推荐)
 pip install git+https://github.com/minirr890112-byte/cursor-doctor.git
-```
 
-### Method 2: Clone and install in editable mode
-
-```bash
+# 方法 2: 克隆本地安装
 git clone https://github.com/minirr890112-byte/cursor-doctor.git
 cd cursor-doctor
 pip install -e .
 ```
 
-### Prerequisites / 依赖
-
-- Python 3.10+
-- `pip` 21.0+
+**依赖**: Python 3.10+, pip 21.0+
 
 ---
 
 ## 🚀 Quick Start / 快速开始
 
 ```bash
-# Diagnose your Cursor environment / 诊断 Cursor 环境
-cursor-doctor diagnose
-
-# Auto-fix detected issues / 自动修复
-cursor-doctor fix
-
-# Browse built-in error signature database / 浏览错误签名库
-cursor-doctor signatures
-
-# Match an error message against known patterns / 匹配错误文本
-cursor-doctor match --text "MCP Client Closed"
+cursor-doctor diagnose       # 诊断 Cursor 环境
+cursor-doctor fix            # 自动修复
+cursor-doctor pricing        # 🆕 定价选型矩阵
+cursor-doctor migrate        # 🆕 500次限→无限迁移指南
+cursor-doctor signatures     # 浏览错误签名库
+cursor-doctor match --text "MCP Client Closed"  # 匹配错误文本
 ```
 
 ---
 
 ## ✨ Features / 功能
 
-| Command | Description / 说明 |
-|---------|---------------------|
-| `cursor-doctor diagnose` | Full health scan of Cursor installation — detects version, system environment, log errors, and computes a health score. / 全面诊断 Cursor 健康状态。 |
-| `cursor-doctor fix [category]` | Auto-fix common problems. Run without arguments for guided repair, or specify a category: `mcp_connection`, `crash`, `network_proxy`, `config_env`. / 自动修复常见问题。 |
-| `cursor-doctor signatures` | Browse the 16 built-in error signatures across 6 categories. / 浏览 16 种内建错误签名。 |
-| `cursor-doctor match --text "..."` | Match a raw error message against the signature database and get diagnosis + fix hints. / 将错误文本匹配到已知签名。 |
-
-### Key Capabilities / 核心能力
-
-- 🔌 **MCP client closed fix** — kill stale processes, clear MCP cache
-- 💥 **Extension crash recovery** — detect corrupted extensions, clear cache safely
-- 🌐 **Proxy conflict resolution** — detect and diagnose proxy/VPN conflicts
-- 🔍 **Auto-detection** of Cursor installation path and config directory
-- 📊 **16 error signatures** extracted from 77+ real-world community error reports
-
----
-
-## 📖 Example Demos / 示例演示
-
-### Demo 1: `cursor-doctor diagnose`
-
-```
-$ cursor-doctor diagnose
-
-╭──────────────────────────────╮
-│  🔍 Cursor Doctor 诊断报告   │
-╰──────────────────────────────╯
-
-Cursor 版本: Cursor 0.45.0 (Electron 29)
-诊断分数: 45% - 需关注 ⚠️
-
-系统环境:
- python      3.11.7
- node        v20.11.0
- npm         10.2.4
- git         git version 2.43.0
- shell       /bin/zsh
- disk_total  460.3 GB
- disk_free   82.1 GB
-
-发现 3 条错误:
-
-┌──────────┬──────────┬──────────────────────┬───────────────────┐
-│ 严重度   │ 签名     │ 错误名               │ 来源              │
-├──────────┼──────────┼──────────────────────┼───────────────────┤
-│ CRITICAL │ MCP-001  │ MCP Client Closed    │ cursor-server.log │
-│ HIGH     │ NET-001  │ 代理冲突导致连接失败  │ renderer.log      │
-│ MEDIUM   │ SYNC-001 │ Cursor 同步冲突/失败  │ sync.log          │
-└──────────┴──────────┴──────────────────────┴───────────────────┘
-
-推荐修复:
-  ■ MCP 连接修复: 重启Cursor / 检查端口 8090-8099 / 关闭VPN / 重置MCP配置
-     使用: cursor-doctor fix mcp_connection
-  ■ 网络/代理修复: 关闭系统代理 / 在 Cursor 设置中配置代理 / 使用系统代理模式
-     使用: cursor-doctor fix network_proxy
-```
-
-### Demo 2: `cursor-doctor fix`
-
-```
-$ cursor-doctor fix
-
-发现 3 类可修复问题:
-
-  1. ■ MCP 连接修复: 重启Cursor / 检查端口 8090-8099 / 关闭VPN / 重置MCP配置
-  2. ■ 网络/代理修复: 关闭系统代理 / 在 Cursor 设置中配置代理 / 使用系统代理模式
-  3. ■ Cursor 同步冲突: 手动选择同步版本 / 关闭自动同步 / 清除云端同步数据
-
-使用 'cursor-doctor fix <category>' 应用特定修复
-或 'cursor-doctor fix mcp_connection' 修复 MCP 连接问题
-
-$ cursor-doctor fix mcp_connection
-
-╭──────────────────────────────╮
-│ 正在执行: 🔌 MCP 连接修复    │
-╰──────────────────────────────╯
-✅ 已终止 Cursor 进程
-✅ 已清除 MCP 缓存
-💡 重启 Cursor 后重试 MCP 连接
-
-╭──────────────────────────────╮
-│ 完成: 🔌 MCP 连接修复        │
-╰──────────────────────────────╯
-```
-
-### Demo 3: `cursor-doctor match`
-
-```
-$ cursor-doctor match --text "MCP Client Closed unexpectedly: connection refused on port 8095"
-
-✅ 找到 1 个匹配:
-
-╭─ 匹配模式: MCP\s*(Client|Server).*closed ──────────────────────╮
-│ MCP Client Closed (MCP-001)                                     │
-│ 严重度: CRITICAL                                                │
-│ 分类: MCP/Agent 连接                                            │
-│                                                                 │
-│ 诊断: MCP (Model Context Protocol) 客户端与服务端连接断开。      │
-│       常见原因：端口被占用、防火墙拦截、代理冲突。               │
-│ 修复: 重启Cursor / 检查端口 8090-8099 / 关闭VPN / 重置MCP配置   │
-╰─────────────────────────────────────────────────────────────────╯
-```
+| Command | Description |
+|---------|-------------|
+| `cursor-doctor diagnose` | 全面诊断 Cursor 健康状态（版本、系统环境、错误日志、健康评分） |
+| `cursor-doctor fix [category]` | 自动修复常见问题（可选类别: mcp_connection, crash, network_proxy, config_env） |
+| `cursor-doctor pricing` | 🆕 Cursor 定价选型矩阵 — 决策树 + 4套餐对比 + FAQ |
+| `cursor-doctor migrate` | 🆕 500次限制→无限使用迁移指南 |
+| `cursor-doctor signatures` | 浏览 28 种错误签名（10 个分类） |
+| `cursor-doctor match --text "..."` | 将错误文本匹配到已知签名 |
 
 ---
 
 ## 📊 Error Signature Database / 错误签名数据库
 
-Built from 77+ real-world Cursor error reports from the Chinese developer community. 16 signatures across 6 categories.  
-基于中文开发者社区 77+ 条 Cursor 报错/崩溃信号分析提取，覆盖 6 大类 16 种错误签名。
+基于中文开发者社区 **77+ 条 Cursor 报错信号**分析提取，v1.2.0 覆盖 **10 大类 28 种错误签名**。
 
-| Category / 分类 | Count | Severity Range | Description |
-|-----------------|-------|----------------|-------------|
-| 🔌 MCP/Agent Connection / MCP/Agent 连接 | 3 | CRITICAL–HIGH | MCP Client Closed, Shell Parse Failure, Token Expired |
-| 💥 Crash/Freeze / 崩溃/闪退 | 3 | CRITICAL–HIGH | Startup white-screen, Extension crash, OOM |
-| 🤖 AI/Agent Malfunction / AI/Agent 功能异常 | 3 | HIGH–MEDIUM | AI timeout, Degraded completions, Agent infinite loop |
-| 🌐 Network/Proxy / 网络/代理 | 2 | CRITICAL–HIGH | Proxy conflict, GFW/network unreachable |
-| ⚙️ Config/Environment / 配置/环境 | 3 | HIGH–MEDIUM | Config corruption, Python not found, Node.js abnormal |
-| 📁 File/Sync / 文件/同步 | 2 | MEDIUM–LOW | Sync conflict, File Watcher limit |
-
-### Full Signature List / 完整签名列表
-
-| ID | Name / 名称 | Category / 分类 | Severity / 严重度 | Community Frequency / 社区频率 |
-|----|-------------|-----------------|-------------------|-------------------------------|
-| MCP-001 | MCP Client Closed | MCP/Agent Connection | CRITICAL | 15 |
-| MCP-002 | Shell Parse Failure | MCP/Agent Connection | CRITICAL | 12 |
-| MCP-003 | Unauthorized / Token Expired | MCP/Agent Connection | HIGH | 10 |
-| CRASH-001 | Startup Crash / White Screen | Crash/Freeze | CRITICAL | 8 |
-| CRASH-002 | Plugin/Extension Crash | Crash/Freeze | HIGH | 6 |
-| CRASH-003 | Out of Memory (OOM) | Crash/Freeze | HIGH | 5 |
-| AI-001 | AI Request Failed / Timeout | AI/Agent Malfunction | HIGH | 12 |
-| AI-002 | Completion Accuracy Degraded | AI/Agent Malfunction | MEDIUM | 8 |
-| AI-003 | Agent Loop / Non-terminating | AI/Agent Malfunction | MEDIUM | 5 |
-| NET-001 | Proxy Conflict | Network/Proxy | HIGH | 8 |
-| NET-002 | GFW / Network Unreachable | Network/Proxy | CRITICAL | 5 |
-| CFG-001 | Config Corruption | Config/Environment | HIGH | 7 |
-| CFG-002 | Python Interpreter Not Found | Config/Environment | MEDIUM | 6 |
-| CFG-003 | Node.js / npm Environment Error | Config/Environment | MEDIUM | 5 |
-| SYNC-001 | Sync Conflict / Failure | File/Sync | MEDIUM | 4 |
-| SYNC-002 | File Watcher Limit | File/Sync | LOW | 3 |
+| Category / 分类 | Count | Severity | Description |
+|-----------------|-------|----------|-------------|
+| 🔌 MCP/Agent 连接 | 4 | CRITICAL–MEDIUM | MCP Client Closed, Shell Parse Failure, Token Expired, 多实例冲突 |
+| 💥 崩溃/闪退 | 3 | CRITICAL–HIGH | 启动白屏, 扩展崩溃, OOM |
+| 🤖 AI/Agent 功能异常 | 3 | HIGH–MEDIUM | AI超时, 补全降级, Agent死循环 |
+| 🌐 网络/代理 | 2 | CRITICAL–HIGH | 代理冲突, GFW/网络不通 |
+| ⚙️ 配置/环境 | 3 | HIGH–MEDIUM | 配置损坏, Python未找到, Node.js异常 |
+| 📁 文件/同步 | 2 | MEDIUM–LOW | 同步冲突, 文件监视上限 |
+| 💰 订阅/套餐 | 3 | HIGH–MEDIUM | 🆕 套餐困惑, 500次限迁移, 代充风险 |
+| 🐌 性能卡顿 | 3 | HIGH–MEDIUM | 🆕 Cursor卡顿, AI排队, 索引卡住 |
+| 🔄 更新/升级 | 3 | CRITICAL–MEDIUM | 🆕 更新失败, 更新后崩溃, macOS兼容 |
+| 👤 账号/登录 | 2 | HIGH–MEDIUM | 🆕 登录循环, 订阅未生效 |
 
 ---
 
-## 🧰 Available Fixes / 可用修复
+## 🎯 Pricing Demo / 定价选型演示
 
-| Fix Category | Command | What It Does |
-|--------------|---------|--------------|
-| 🔌 MCP Connection | `cursor-doctor fix mcp_connection` | Kill stale Cursor processes, clear MCP cache |
-| 💥 Crash Recovery | `cursor-doctor fix crash` | Clear Cursor cache directories, restart Cursor |
-| 🌐 Network/Proxy | `cursor-doctor fix network_proxy` | Detect proxy conflicts, suggest configuration |
-| ⚙️ Config Reset | `cursor-doctor fix config_env` | Backup and reset settings.json to defaults |
+```
+$ cursor-doctor pricing
+
+╭─────────────────────────────────── 决策树 ───────────────────────────────────╮
+│  🎯 Cursor 定价决策树                                                        │
+│                                                                              │
+│  Q1: 每月AI编程 超过 10 小时？                                               │
+│    ├─ 否 → Free 或 Pro                                                       │
+│    └─ 是 → Q2                                                                │
+│  Q2: 需要 团队协作/管理 + 能 报销？                                          │
+│    ├─ 否 → Pro ($20/月) ✅ ⬅️ 90% 开发者的最佳选择                            │
+│    └─ 是 → Q3                                                                │
+
+                    📊 Cursor 套餐对比 (2026年6月最新)
+┏━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━┯━━━━━━━━━┯━━━━━━━━━━━━━━┯━━━━━━━━━━━━━┓
+┃ 特性                   │  Free  │ Pro $20 │ Business $60 │ Ultra $200  ┃
+┠────────────────────────┼────────┼─────────┼──────────────┼─────────────┨
+┃ AI 补全次数            │2000/月 │ 无限 ⭐ │     无限     │    无限     ┃
+┃ Agent 工具调用         │   ❌   │ 无限 ⭐ │     无限     │    无限     ┃
+┃ 适合谁                 │  尝鲜  │ 👤 个人 │  👥 小团队   │   🏢 企业   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━┷━━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━━━┛
+```
 
 ---
 
@@ -215,8 +114,9 @@ cursor-doctor/
 │   ├── __init__.py          # Package init, version
 │   ├── cli.py               # CLI entry (click + rich)
 │   ├── diagnose.py          # Core diagnostic engine
+│   ├── pricing.py           # 🆕 Pricing matrix & migration guide
 │   ├── signatures/
-│   │   └── database.py      # 16 error signatures, matching logic
+│   │   └── database.py      # 28 error signatures, matching logic
 │   └── fixes/
 │       └── apply.py         # Auto-fix implementations
 ├── pyproject.toml
@@ -227,8 +127,7 @@ cursor-doctor/
 
 ## 🔗 Also Available on ClawHub
 
-> 🚀 **cursor-doctor** will soon be available as a skill on **[ClawHub](https://clawhub.ai)** — the AI skills marketplace.  
-> *Skill page coming soon — check back for updates!*
+> 🚀 **cursor-doctor** will soon be available as a skill on **[ClawHub](https://clawhub.ai)** — the AI skills marketplace.
 
 ---
 
@@ -240,5 +139,4 @@ MIT © [minirr890112-byte](https://github.com/minirr890112-byte)
 
 ## 🙏 Acknowledgments / 致谢
 
-Error signatures extracted and categorized from 77+ community error reports in the Chinese Cursor/VS Code developer community.  
-错误签名提取自中文 Cursor/VS Code 开发者社区的 77+ 条真实报错信号。
+错误签名提取自中文 Cursor 开发者社区的 **77+ 条真实报错信号**。定价数据基于 **V2EX 101条 + CSDN 55篇** 社区讨论。

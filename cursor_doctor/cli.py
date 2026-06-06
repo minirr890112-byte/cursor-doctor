@@ -1,5 +1,7 @@
 """Cursor Doctor CLI - Cursor IDE 故障诊断与修复命令行工具"""
 
+from __future__ import annotations
+
 import click
 from rich.console import Console
 from rich.table import Table
@@ -12,6 +14,7 @@ from . import __version__
 from .diagnose import CursorDoctor
 from .fixes.apply import suggest_fixes, apply_fix
 from .signatures.database import SIGNATURES, count_by_category, CATEGORY_NAMES
+from .pricing import render_pricing_matrix, render_migration_guide
 
 console = Console()
 
@@ -213,3 +216,37 @@ def match(text: str | None, file_path: str | None):
             title=f"匹配模式: {pattern}",
             border_style=sev_style
         ))
+
+
+@main.command()
+def pricing():
+    """🎯 Cursor 套餐定价选型矩阵 — 帮你快速决策选哪个套餐
+
+    包含决策树、套餐对比表、500次限制迁移指南。
+    基于 2026年6月最新 V2EX 101条 + CSDN 55篇 社区讨论。
+    """
+    console.print(Panel.fit(
+        "[bold cyan]🎯 Cursor 定价选型矩阵[/]",
+        subtitle="[dim]数据来源: V2EX 101条讨论 + CSDN 55篇文章 + Cursor 官方公告 (2026.06)[/]",
+        border_style="cyan"
+    ))
+    render_pricing_matrix()
+
+
+@main.command()
+def migrate():
+    """📋 500次限制→无限使用 迁移指南 — 搞懂 Cursor Pro 定价变化"""
+    console.print(Panel.fit(
+        "[bold yellow]📋 Cursor Pro 迁移指南 — 500次限制已取消！[/]",
+        border_style="yellow"
+    ))
+    render_migration_guide()
+
+
+@main.command(name="list-signatures")
+def list_signatures():
+    """📋 列出所有已知错误签名 (同 signatures 命令)"""
+    # 直接调用 ctx.invoke 来复用 signatures 命令
+    import click
+    ctx = click.get_current_context()
+    ctx.invoke(signatures)
